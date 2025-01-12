@@ -8,6 +8,32 @@ class TestShoppingCart(unittest.TestCase):
     def setUp(self):
         self.cart = ShoppingCart()
 
+    # 測試從購物車成功移除商品
+    def test_remove_from_cart(self):
+        cart = self.cart
+        cart.shopping_cart.append({"id": 1, **cart.products[1]})
+        expected_output = "\n商品1 已從購物車移除。\n"
+
+        sys.stdout = StringIO()
+        cart.remove_from_cart(1)
+        actual_output = sys.stdout.getvalue()
+        sys.stdout = sys.__stdout__
+
+        self.assertEqual(actual_output, expected_output)
+        self.assertNotIn(1, [item['id'] for item in cart.shopping_cart])
+
+    # 測試當商品不存在於購物車時移除的情況
+    def test_remove_invalid_product_from_cart(self):
+        cart = self.cart
+        expected_output = "\n購物車內無此商品，無法移除。\n"
+
+        sys.stdout = StringIO()
+        cart.remove_from_cart(1)
+        actual_output = sys.stdout.getvalue()
+        sys.stdout = sys.__stdout__
+
+        self.assertEqual(actual_output, expected_output)
+
     # 測試購物車是否加入成功
     def test_add_to_cart(self):
         cart = self.cart
